@@ -46,6 +46,36 @@ function boston_flowers_enqueue_assets() {
 }
 add_action('wp_enqueue_scripts', 'boston_flowers_enqueue_assets');
 
+function boston_flowers_loop_product_thumbnail() {
+    global $product;
+
+    if (!$product instanceof WC_Product) {
+        return;
+    }
+
+    $image_id = $product->get_image_id();
+    if ($image_id) {
+        echo wp_get_attachment_image(
+            $image_id,
+            'large',
+            false,
+            array(
+                'class'   => 'attachment-large size-large',
+                'loading' => 'lazy',
+                'sizes'   => '(max-width: 640px) calc(100vw - 40px), (max-width: 1200px) 50vw, 760px',
+            )
+        );
+        return;
+    }
+
+    echo wc_placeholder_img('woocommerce_single');
+}
+
+add_action('after_setup_theme', function () {
+    remove_action('woocommerce_before_shop_loop_item_title', 'woocommerce_template_loop_product_thumbnail', 10);
+    add_action('woocommerce_before_shop_loop_item_title', 'boston_flowers_loop_product_thumbnail', 10);
+});
+
 function boston_flowers_asset_version($file) {
     $path = get_stylesheet_directory() . $file;
     return file_exists($path) ? filemtime($path) : '1.0.0';
