@@ -221,3 +221,23 @@ function boston_flowers_shop_filters($category_slug = null) {
     </aside>
     <?php
 }
+
+add_filter('woocommerce_get_breadcrumb', 'boston_flowers_fix_breadcrumbs', 10, 2);
+function boston_flowers_fix_breadcrumbs($crumbs, $breadcrumb) {
+    if (is_shop()) {
+        return $crumbs;
+    }
+    $shop_page_id = wc_get_page_id('shop');
+    if ($shop_page_id < 1 || count($crumbs) < 2) {
+        return $crumbs;
+    }
+    $shop_url  = get_permalink($shop_page_id);
+    $shop_name = get_the_title($shop_page_id) ?: 'Shop';
+    $home      = $crumbs[0];
+    $rest      = array_slice($crumbs, 1);
+    if (!empty($rest) && isset($rest[0][1]) && $rest[0][1] === $shop_url) {
+        return $crumbs;
+    }
+    array_unshift($rest, array($shop_name, $shop_url));
+    return array_merge(array($home), $rest);
+}

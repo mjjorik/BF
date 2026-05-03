@@ -322,3 +322,184 @@ body.woocommerce-page { overflow-x: hidden; }
   .bf-wc .coupon { display: grid; }
   .bf-wc .coupon .input-text, .bf-wc .coupon .button { width: 100%; }
 }
+
+/* =====================================================================
+   P1 — Always-dark nav on WooCommerce pages
+   ===================================================================== */
+body.woocommerce-page nav {
+  background: rgba(17,19,21,.97);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 1px 0 var(--bd, rgba(207,162,154,.18));
+}
+
+/* P1 — Compact hero for transactional pages (cart, checkout, account, order-received) */
+.bf-wc-cart-page .bf-wc-hero,
+.bf-wc-checkout-page .bf-wc-hero,
+.bf-wc-account-page .bf-wc-hero,
+.bf-wc-order-received-page .bf-wc-hero {
+  padding: clamp(36px,5vw,56px) 0 clamp(24px,3vw,36px);
+}
+
+/* P1 — Suppress decorative BF watermark on transactional pages */
+.bf-wc-cart-page .bf-wc-hero::before,
+.bf-wc-checkout-page .bf-wc-hero::before,
+.bf-wc-account-page .bf-wc-hero::before,
+.bf-wc-order-received-page .bf-wc-hero::before {
+  display: none;
+}
+
+/* P1 — Smaller h1 on transactional pages */
+.bf-wc-cart-page .bf-wc-hero h1,
+.bf-wc-checkout-page .bf-wc-hero h1,
+.bf-wc-account-page .bf-wc-hero h1,
+.bf-wc-order-received-page .bf-wc-hero h1 {
+  font-size: clamp(32px,4.5vw,52px);
+}
+
+/* =====================================================================
+   P3 — Neutralise WordPress block-editor primary colour variable
+   ===================================================================== */
+.bf-wc { --wp--preset--color--primary: var(--bf-rose); }
+
+/* P3 — Additional WooCommerce button selectors that bypass the main rule */
+.bf-wc input[name="update_cart"],
+.bf-wc input[name="apply_coupon"],
+.bf-wc input[type="submit"].checkout-button,
+.bf-wc .checkout-button,
+.bf-wc .wc-block-components-checkout-place-order-button {
+  align-items: center;
+  background: var(--bf-rose);
+  border: 1px solid var(--bf-rose);
+  border-radius: 0;
+  color: var(--bf-ink);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  justify-content: center;
+  letter-spacing: .14em;
+  min-height: 48px;
+  padding: 14px 22px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+.bf-wc input[name="update_cart"]:hover,
+.bf-wc input[name="apply_coupon"]:hover,
+.bf-wc .checkout-button:hover,
+.bf-wc .wc-block-components-checkout-place-order-button:hover {
+  background: transparent;
+  border-color: var(--bf-rose-strong);
+  color: var(--bf-rose-strong);
+}
+.bf-wc .button:disabled,
+.bf-wc .button[disabled],
+.bf-wc input[name="update_cart"]:disabled,
+.bf-wc input[name="apply_coupon"]:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+/* =====================================================================
+   P4 — Remove WooCommerce notice ::before pseudo-icons; fix layout
+   ===================================================================== */
+.bf-wc .woocommerce-info::before,
+.bf-wc .woocommerce-message::before,
+.bf-wc .woocommerce-error li::before,
+.bf-wc .woocommerce-notices-wrapper .woocommerce-info::before,
+.bf-wc .woocommerce-notices-wrapper .woocommerce-message::before {
+  content: none !important;
+  display: none !important;
+}
+.bf-wc .woocommerce-info,
+.bf-wc .woocommerce-message {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+.bf-wc .woocommerce-info .button,
+.bf-wc .woocommerce-info a.button,
+.bf-wc .woocommerce-message .button,
+.bf-wc .woocommerce-message a.button {
+  flex-shrink: 0;
+  float: none;
+  margin: 0;
+  min-height: 40px;
+  padding: 10px 18px;
+}
+
+/* =====================================================================
+   P5 — Coupon / promo-code toggle
+   ===================================================================== */
+.bf-cart-coupon-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--bf-rose-strong);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  gap: 8px;
+  letter-spacing: .08em;
+  margin-bottom: 12px;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: rgba(207,162,154,.4);
+  text-underline-offset: 3px;
+  transition: color .2s ease;
+}
+.bf-cart-coupon-toggle:hover { color: var(--bf-rose); }
+.bf-cart-coupon-toggle::before {
+  align-items: center;
+  border: 1px solid var(--bf-rose-strong);
+  border-radius: 50%;
+  content: "+";
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 300;
+  height: 22px;
+  justify-content: center;
+  line-height: 1;
+  transition: transform .2s ease;
+  width: 22px;
+}
+.bf-cart-coupon-toggle[aria-expanded="true"]::before { transform: rotate(45deg); }
+
+/* Hide coupon row until toggled; restore flex when open */
+.bf-wc .bf-cart-coupon { display: none !important; }
+.bf-wc .bf-cart-coupon.is-open { display: flex !important; flex-wrap: wrap; gap: 10px; margin-top: 0; }
+@media (max-width: 560px) {
+  .bf-wc .bf-cart-coupon.is-open { display: grid !important; }
+}
+
+/* =====================================================================
+   P6 — Cascade fix: .woocommerce card image at 431–560 px
+   The unscoped .woocommerce rule added in Session 2 (aspect-ratio:3/4)
+   has the same specificity as the @media(max-width:560px) block above
+   but appears later in source order, overriding it. This block restores
+   the compact ratio for that range.
+   ===================================================================== */
+@media (max-width: 560px) {
+  .woocommerce ul.products li.product a img {
+    aspect-ratio: 4/3.55;
+  }
+}
+
+.bf-wc-product-breadcrumbs .woocommerce-breadcrumb {
+  align-items: center;
+  color: var(--bf-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  gap: 8px;
+  letter-spacing: .13em;
+  line-height: 1.6;
+  margin: 0;
+  text-transform: uppercase;
+}
+.bf-wc-product-breadcrumbs .woocommerce-breadcrumb a { color: rgba(234,230,225,.78); text-decoration: none; transition: color .2s ease; }
+.bf-wc-product-breadcrumbs .woocommerce-breadcrumb a:hover { color: var(--bf-rose-strong); }
